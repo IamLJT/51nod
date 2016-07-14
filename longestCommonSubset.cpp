@@ -20,7 +20,7 @@ using namespace std;
 string longestSubset(string A, string B)
 {
 	vector<int> A_num(A.size(),-1);
-	string res;
+	string res, t(B);
     for(int i=0; i<A.size(); i++)
 	{
 		int pos=B.find(A[i]);
@@ -30,47 +30,74 @@ string longestSubset(string A, string B)
 			B[pos]='#';
 		if(pos==-1&&i>0&&temp>-1)
 			A_num[i]=A_num[temp];
-	}
+	}// 矩阵有问题,当A重复的数字较多时，矩阵设置不合理
 
 	// 已经求出了位置序列，接下来就是求最长递增子序列
-	vector<int> A_temp(A_num), temp0, res0;
-	set<int> temp;
-	int max_A=0;
-	sort(A_temp.begin(), A_temp.end());
-	//for(int j=0; j<A_temp.size(); j++)
-	//	temp.insert(A_temp[j]);
-	for(int i=A_num.size(); i>=0; i--)
-	{
-	//	temp0.clear();
-	//	int length=0;
-		temp.insert(A_num[i]);
-		set<int>::iterator it=lower_bound(temp.begin(), temp.end(), A_num[i]);
+	//vector<int> A_temp(A_num), temp0, res0;
+	//set<int> temp;
+	//int max_A=0;
+	//sort(A_temp.begin(), A_temp.end());
+	////for(int j=0; j<A_temp.size(); j++)
+	////	temp.insert(A_temp[j]);
+	//for(int i=A_num.size(); i>=0; i--)
+	//{
+	////	temp0.clear();
+	////	int length=0;
+	//	temp.insert(A_num[i]);
+	//	set<int>::iterator it=lower_bound(temp.begin(), temp.end(), A_num[i]);
 
-		//while(it++!=temp.end())
-		//	length++;
-		/*int length=A_temp.end()-it+1;
-		int e=A_temp.size()-temp.size();*/
+	//	//while(it++!=temp.end())
+	//	//	length++;
+	//	/*int length=A_temp.end()-it+1;
+	//	int e=A_temp.size()-temp.size();*/
 
-		while(it!=temp.end())
-			temp0.push_back(*it++);
+	//	while(it!=temp.end())
+	//		temp0.push_back(*it++);
 
-		if(max_A<temp0.size())
-		{
-			res0.clear();
-			res0.assign(temp0.begin(), temp0.end())
-		}
-		
-		A_temp.erase(lower_bound(A_temp.begin(), A_temp.end(), A_num[i]));
-		if(find(A_temp.begin(), A_temp.end(), A_num[i])==A_temp.end())
-			temp.erase(A_num[i]);
-	}
+	//	if(max_A<temp0.size())
+	//	{
+	//		res0.clear();
+	//		res0.assign(temp0.begin(), temp0.end())
+	//	}
+	//	
+	//	A_temp.erase(lower_bound(A_temp.begin(), A_temp.end(), A_num[i]));
+	//	if(find(A_temp.begin(), A_temp.end(), A_num[i])==A_temp.end())
+	//		temp.erase(A_num[i]);
+	//}
 	
+	vector<int> dp(A.size(), 1), p(A.size(),-1);
+	int m=0, maxlen=1;
+	for(int i=0; i<A.size(); i++)
+	{
+		for(int j=0; j<i; j++)
+		{
+			if(A_num[i]>=0&&A_num[j]>=0&&A_num[i]>A_num[j]&&dp[i]<dp[j]+1)
+			{
+				dp[i]=dp[j]+1;
+				p[i]=j;
+			}
+			if(maxlen<dp[i])
+			{
+				m=i;
+				maxlen=dp[i];
+			}
+		}
+	}
+
+	while(m!=-1)
+	{
+		res=t[A_num[m]]+res;
+		m=p[m];
+	}
+
 	return res;
 }
 
 int main()
 {
-	cout << longestSubset("abcicba", "abdkscab") << endl;
+	string str1, str2;
+	cin >> str1 >> str2;
+	cout << longestSubset(str1, str2) << endl;
 	system("pause");
 	return 0;
 }
