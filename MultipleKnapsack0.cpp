@@ -1,10 +1,10 @@
 /*
-���⣺���ر�������
+问题：多重背包问题
 
-˼·1����dp[i][j]��ʾǰi����Ʒ��������Ϊj��ʱ�������ֵ��������ҳ�
-dp�е����ֵ��(�ύʱ���������why��)
+思路1：用dp[i][j]表示前i件物品，总重量为j的时候的最大价值，最后再找出
+dp中的最大值。(提交时编译出错，why？)
 
-˼·2�����½��з��䣬��Ϊ����һ������������2���ݱ�ʾ������
+思路2：重新进行分配，因为任意一个数都可以由2的幂表示出来。
 */
 
 #include <iostream>
@@ -21,7 +21,7 @@ ll MaxValueMultipack(ll W, vector<ll>& Wi, vector<ll>& Pi, vector<ll>& Ci)
 	ll res=0;
 	if(Wi.size()==0) return 0;
 
-	/* // ˼·1
+	/* // 思路1
 	vector<vector<ll>> dp(Wi.size(), vector<ll>(W+1, (ll)0));
 	for(ll i=0; i<Ci[0]; i++)
 	{
@@ -33,13 +33,13 @@ ll MaxValueMultipack(ll W, vector<ll>& Wi, vector<ll>& Pi, vector<ll>& Ci)
 		for(ll j=0; j<=W; j++)
 			for(ll k=0; k<=min(j/Wi[i], Ci[i]); k++)
 				dp[i][j]=max(dp[i][j], dp[i-1][j-k*Wi[i]]+k*Pi[i]);
-		// ��̬�滮�Ĺؼ�
+		// 动态规划的关键
 	}
 	for(ll i=0; i<Wi.size(); i++)
 		res=max(res, *max_element(dp[i].begin(), dp[i].end()));
 	*/
 
-	// ˼·2
+	// 思路2
 	vector<ll> Wj, Pj;
 	for(int i=0; i<Ci.size(); i++)
 	{
